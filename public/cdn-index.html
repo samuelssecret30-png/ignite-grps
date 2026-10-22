@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>IGNITE OS</title>
+	<script>
+		// Get the base path from current URL
+		const url = new URL(window.location.href);
+		const basePath = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
+		
+		// Store base path for all resources
+		window.IGNITE_BASE_PATH = basePath;
+		
+		// Proxy console logs for debugging
+		console.log('IGNITE OS Loading from:', basePath);
+	</script>
+</head>
+<body>
+	<div id="app"></div>
+	<script>
+		// Load index.html content and fix all paths
+		fetch(window.IGNITE_BASE_PATH + 'index.html')
+			.then(r => r.text())
+			.then(html => {
+				// Fix all relative paths to be from base path
+				html = html.replace(/href="(?!https?:\/\/|data:|\/\/)/g, 'href="' + window.IGNITE_BASE_PATH);
+				html = html.replace(/src="(?!https?:\/\/|data:|\/\/|blob:)/g, 'src="' + window.IGNITE_BASE_PATH);
+				html = html.replace(/url\("(?!https?:\/\/|data:|\/\/)/g, 'url("' + window.IGNITE_BASE_PATH);
+				
+				// Also fix JavaScript path references
+				html = html.replace(/window\.top\.location\.href = "(?!https?:\/\/)/g, 'window.top.location.href = "' + window.IGNITE_BASE_PATH);
+				html = html.replace(/\.href = ['"](?!https?:\/\/|data:|\/\/)/g, '.href = \'' + window.IGNITE_BASE_PATH);
+				
+				// Write to page
+				document.documentElement.innerHTML = html;
+				
+				// Execute any scripts
+				const scripts = document.querySelectorAll('script');
+				scripts.forEach(script => {
+					if (script.src) {
+						const newScript = document.createElement('script');
+						newScript.src = script.src.startsWith('http') ? script.src : window.IGNITE_BASE_PATH + script.src;
+						script.parentNode.replaceChild(newScript, script);
+					}
+				});
+			})
+			.catch(err => {
+				console.error('Failed to load IGNITE OS:', err);
+				document.body.innerHTML = '<h1>Error loading IGNITE OS</h1><p>' + err.message + '</p>';
+			});
+	</script>
+</body>
+</html>
