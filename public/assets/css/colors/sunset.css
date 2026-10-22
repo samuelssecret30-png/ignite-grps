@@ -1,0 +1,21 @@
+:root {
+    --bg: #1a0f05;
+    --bg-2: #241508;
+    --bg-3: #2e1d08;
+    --bg-4: #3d2608;
+    --bg-5: rgba(26, 15, 5, 0.8);
+    --border: rgba(255, 165, 100, 0.2);
+    --border-2: rgba(255, 165, 100, 0.12);
+    --border-3: rgba(255, 165, 100, 0.08);
+    --border-4: rgba(255, 165, 100, 0.05);
+    --text: #f5e8d0;
+    --text-2: #d0b080;
+    --bright-text: #ffffff;
+    --accent: #ff8c42;
+    --accent-2: #e85d04;
+    --accent-glow: rgba(255, 140, 66, 0.15);
+}
+
+#notheme {
+    display: none !important;
+}
